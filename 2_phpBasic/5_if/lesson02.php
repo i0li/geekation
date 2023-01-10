@@ -20,5 +20,5 @@ if($score >= 80){
   $rank = '不可';
 }
 
-echo $score.'点は「'.$rank.'」';
+echo $score.'点は「'.$rank.'」です。';
 ?>
