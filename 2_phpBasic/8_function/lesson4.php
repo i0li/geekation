@@ -20,7 +20,7 @@
 
 $yen = 10000;   // 購入金額
 $product = 150; // 商品金額
-Í
+
 function calc($yen, $product) {
     // この関数内に処理を記述
     $unit = $yen < 1000 ? '円玉' : '円札';
