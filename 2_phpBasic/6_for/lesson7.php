@@ -43,8 +43,11 @@ while($uncompleteFlag){
     <!-- ここに並び替え後を表示 -->
     <?php
     foreach($arr as $value){
-        echo $value;
-        echo '<br/>';
+        if(empty(next($arr))){
+            echo $value;
+            break;
+        }
+        echo $value.', ';
     }
     ?>
 </body>
