@@ -41,7 +41,7 @@
                     </div>
                     <table class="button-table margin-top-bottom_level2">
                         <tr>
-                            <td><button class="btn btn-outline-black" onclick="history.back(-1)" type="button">キャンセル</button></td>
+                            <td><button class="btn btn-outline-black" name="back_btn" type="submit" formaction="contact.php" formmethod="post">キャンセル</button></td>
                             <td><button class="btn btn-outline-black" type="submit">送信</button></td>
                         </tr>
                     </table>

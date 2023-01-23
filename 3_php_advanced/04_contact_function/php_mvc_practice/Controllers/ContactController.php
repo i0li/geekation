@@ -17,25 +17,54 @@ class ContactController {
   }
 
   public function confirm() {
-    $errors = Null;
+    $errors = array();
+    $is_valid = False;
+    $name = $this->request['post']['name'];
+    $kana = $this->request['post']['kana'];
+    $tel = $this->request['post']['tel'];
+    $email = $this->request['post']['email'];
+    $body = $this->request['post']['body'];
 
-    if(count($this->request['post']) === 0){
-      return $errors;
+    //氏名のバリデーションチェック
+    if(strlen($name) === 0){
+      $errors['name'] = '氏名を入力してください';
+    }
+    elseif(strlen($name)>10){
+      $errors['name'] = '10文字以内で入力してください';
+      return;
+    }
+    //フリガナのバリデーションチェック
+    if(strlen($kana) === 0){
+      $errors['kana'] = 'フリガナを入力してください';
+    }
+    elseif(strlen($kana)>10){
+      $errors['kana'] = '10文字以内で入力してください';
+    }
+    //電話番号のバリデーションチェック
+    if(preg_match('/[^0-9]+/', $tel)){
+        $errors['tel'] = '数字のみで入力してください';
+    }
+    //メールアドレスのバリデーションチェック
+    if(strlen($email) === 0){
+      $errors['email'] = 'メールアドレスを入力してください';
+    }elseif(!preg_match('/.+@.+/', $email)){
+      $errors['email'] = 'メールアドレスに「@」を挿入してください';
+    }
+    //お問い合わせ内容のバリデーションチェック
+    if(strlen($body) === 0){
+      $errors['body'] = 'お問い合わせ内容を入力してください';
     }
 
-    $this->Contact->setName($this->request['post']['name']);
-    $this->Contact->setKana($this->request['post']['kana']);
-    $this->Contact->setTel($this->request['post']['tel']);
-    $this->Contact->setEmail($this->request['post']['email']);
-    $this->Contact->setBody($this->request['post']['body']);
-
-    if($this->Contact->is_valid()){
-      header('Location: contact_confirm.php', true, 307);
+    //バリデーションをクリアした場合、確認画面へ遷移
+    if(count($errors) === 0){
+      $is_valid = True;
     }
 
-    $errors = $this->Contact->getErrors();
-
-    return $errors;
+    $params = [
+      'errors' => $errors,
+      'is_valid' => $is_valid
+    ];
+    return $params;
   }
 }
 ?>

@@ -1,15 +1,21 @@
 <?php
 require_once(ROOT_PATH .'Controllers/ContactController.php');
+
+$forms = [
+    'name' => '氏名', 
+    'kana' => 'フリガナ',
+    'tel' => '電話番号',
+    'email' => 'メールアドレス'
+];
 $contact = new ContactController();
-$errors = $contact->confirm();
-$is_exist_post = isset($_POST);
-function get_value($param, $name){
-    $value = '';
-    if(isset($param[$name])){
-        $value = $param[$name];
-    };
-    return $value;
+if(count($_POST) != 0){
+    $params = $contact->confirm();
+    //バリデーションをクリアした時に確認画面に遷移（確認画面から戻ってきた時はリダイレクトしない）
+    if($params['is_valid'] && !(isset($_POST['back_btn']))){
+        header('Location: contact_confirm.php', true, 307);
+    }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,84 +38,44 @@ function get_value($param, $name){
             <div class="form-area">
                 <h2 class="index_level2 center margin-top-bottom_level2">入力画面</h2>
                 <form class="form_center" action='contact.php' method="post">
+                    <?php
+                    foreach($forms as $key => $value){
+                    ?>
                     <div class="margin-top-bottom_level1">
-                        <label for="name">氏名</label>
+                        <label for=<?php echo $key?>><?php echo $value?></label>
                         <br/>
-                        <input class="form-control <?php echo get_value($errors,'name'); ?>" type="text" name="name" value="<?php echo get_value($_POST, 'name') ?>">
+                        <input 
+                            class="form-control <?php if(isset($params['errors'][$key])){echo 'red-border';} ?>" 
+                            type="text" 
+                            name=<?php echo $key?> 
+                            value="<?php if(isset($_POST[$key])){echo $_POST[$key];} ?>"
+                        >
                         <?php 
-                        if(isset($errors['name'])){
-                        ?>
-                        <h6 class='error-text'>
-                        <?php
-                            echo $errors['name'];
+                        if(isset($params['errors'][$key])){
+                            echo '<h6 class="error-text">'.$params['errors'][$key].'</h6>';
                         }
                         ?>
-                        </h6>
                     </div>
-                    <div class="margin-top-bottom_level1">
-                        <label for="kana">フリガナ</label>
-                        <br/>
-                        <input class="form-control <?php echo get_value($errors,'kana'); ?>" type="text" name="kana" value="<?php echo get_value($_POST, 'kana') ?>">
-                        <?php 
-                        if(isset($errors['kana'])){
-                        ?>
-                        <h6 class='error-text'>
-                        <?php
-                            echo $errors['kana'];
-                        }
-                        ?>
-                        </h6>
-                    </div>
-                    <div class="margin-top-bottom_level1">
-                        <label for="tel">電話番号</label>
-                        <br/>
-                        <input class="form-control <?php echo get_value($errors,'tel'); ?>" type="text" name="tel" value="<?php echo get_value($_POST, 'tel') ?>">
-                        <?php 
-                        if(isset($errors['tel'])){
-                        ?>
-                        <h6 class='error-text'>
-                        <?php
-                            echo $errors['tel'];
-                        }
-                        ?>
-                        </h6>
-                    </div>
-                    <div class="margin-top-bottom_level1">
-                        <label for="email">メールアドレス</label>
-                        <br/>
-                        <input class="form-control <?php echo get_value($errors,'email'); ?>" type="text" name="email" value="<?php echo get_value($_POST, 'email') ?>">
-                        <?php 
-                        if(isset($errors['email'])){
-                        ?>
-                        <h6 class='error-text'>
-                        <?php
-                            echo $errors['email'];
-                        }
-                        ?>
-                        </h6>
-                    </div>
+                    <?php
+                    } 
+                    ?>
                     <div class="margin-top-bottom_level1">
                         <label for="body">お問い合わせ内容</label>
                         <br/>
-                        <textarea class="form-control <?php echo get_value($errors,'body'); ?>" type="text" name="body"><?php echo get_value($_POST, 'body') ?></textarea>
+                        <textarea class="form-control <?php if(isset($params['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
+                        ><?php if(isset($_POST['body'])){echo $_POST['body'];} ?></textarea>
                         <?php 
-                        if(isset($errors['body'])){
-                        ?>
-                        <h6 class='error-text'>
-                        <?php
-                            echo $errors['body'];
+                        if(isset($params['errors']['body'])){
+                            echo '<h6 class="error-text">'.$params['errors']['body'].'</h6>';
                         }
                         ?>
-                        </h6>
                     </div>
                     <div class="center margin-top-bottom_level2">
                         <button class="btn btn-outline-black" type="submit">送信</button>
                     </div>
                 </form>
             </div>
-            <?php 
-            echo Null;
-            include("footer.php") ?>
+            <?php include("footer.php") ?>
         </div>
     </div>
 </body>

@@ -18,69 +18,6 @@ class Contact extends Db {
   }
 
   /**
-   * バリデーション
-   */
-  public function getErrors(){
-    return $this->errors;
-  }
-  public function is_valid(){
-    $this->validate_name();
-    $this->validate_kana();
-    $this->validate_tel();
-    $this->validate_email();
-    $this->validate_body();
-
-    if(is_null($this->errors)){
-      return True;
-    }
-    return count($this->errors) === 0;
-  }
-
-  private function validate_name(){
-    if(strlen($this->name) === 0){
-      $this->errors['name'] = '氏名を入力してください';
-      return;
-    }
-    if(strlen($this->name)>10){
-      $this->errors['name'] = '10文字以内で入力してください';
-      return;
-    }
-  }
-  private function validate_kana(){
-    if(strlen($this->kana) === 0){
-      $this->errors['kana'] = 'フリガナを入力してください';
-      return;
-    }
-    if(strlen($this->id)>10){
-      $this->errors['kana'] = '10文字以内で入力してください';
-      return;
-    }
-  }
-  private function validate_tel(){
-    if(preg_match('/[^0-9]+/', $this->tel)){
-      $this->errors['tel'] = '数字のみで入力してください';
-      return;
-    }
-  }
-  private function validate_email(){
-    if(strlen($this->email) === 0){
-      $this->errors['email'] = 'メールアドレスを入力してください';
-      return;
-    }
-    if(!preg_match('/.+@.+/', $this->email)){
-      $this->errors['email'] = 'メールアドレスに「@」を挿入してください';
-      return;
-    }
-  }
-  private function validate_body(){
-    if(strlen($this->email) === 0){
-      $this->errors['body'] = 'お問い合わせ内容を入力してください';
-      return;
-    }
-  }
-
-
-  /**
    * アクセス修飾子
    */
   public function getId() : string{
