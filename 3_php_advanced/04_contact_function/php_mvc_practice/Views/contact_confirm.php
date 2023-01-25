@@ -1,3 +1,12 @@
+<?php
+require_once(ROOT_PATH .'Controllers/ContactController.php');
+
+if(isset($_POST['submit'])){
+    $contact = new ContactController();
+    $contact->insertContact();
+    header('Location: contact_complete.php', true, 307);
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,8 +26,8 @@
         <div class="container-fruid" >
             <?php include("header.php") ?>
             <div class="form-area">
-                <h2 class="index_level2 center margin-top-bottom_level2">入力画面</h2>
-                <form class="form_center" action="contact_complete.php" method="post">
+                <h2 class="index_level2 center margin-top-bottom_level2">確認画面</h2>
+                <form class="form_center" action="contact_confirm.php" method="post">
                     <div class="margin-top-bottom_level1">
                         <label for="name">氏名</label><br/>
                         <input class="form-control" type="text" name="name" value="<?php echo $_POST["name"]?>" readonly>
@@ -42,7 +51,7 @@
                     <table class="button-table margin-top-bottom_level2">
                         <tr>
                             <td><button class="btn btn-outline-black" name="back_btn" type="submit" formaction="contact.php" formmethod="post">キャンセル</button></td>
-                            <td><button class="btn btn-outline-black" type="submit">送信</button></td>
+                            <td><button class="btn btn-outline-black" name='submit' type="submit">送信</button></td>
                         </tr>
                     </table>
                 </form>

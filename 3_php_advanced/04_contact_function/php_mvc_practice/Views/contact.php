@@ -8,6 +8,7 @@ $forms = [
     'email' => 'メールアドレス'
 ];
 $contact = new ContactController();
+
 if(count($_POST) != 0){
     $params = $contact->confirm();
     //バリデーションをクリアした時に確認画面に遷移（確認画面から戻ってきた時はリダイレクトしない）
@@ -15,7 +16,6 @@ if(count($_POST) != 0){
         header('Location: contact_confirm.php', true, 307);
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,6 +30,7 @@ if(count($_POST) != 0){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.7/css/swiper.min.css" />
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <script defer src="../js/index.js"></script>
+    <script defer src="../js/contact.js"></script>
 </head>
 <body>
     <div class="main">
@@ -37,7 +38,7 @@ if(count($_POST) != 0){
             <?php include("header.php") ?>
             <div class="form-area">
                 <h2 class="index_level2 center margin-top-bottom_level2">入力画面</h2>
-                <form class="form_center" action='contact.php' method="post">
+                <form name='contact_form' class='form_center' action='contact_confirm.php' method='post' onsubmit='return confirm()'>
                     <?php
                     foreach($forms as $key => $value){
                     ?>
@@ -50,11 +51,13 @@ if(count($_POST) != 0){
                             name=<?php echo $key?> 
                             value="<?php if(isset($_POST[$key])){echo $_POST[$key];} ?>"
                         >
+                        <h6 class="error-text <?php echo $key ?>">
                         <?php 
                         if(isset($params['errors'][$key])){
-                            echo '<h6 class="error-text">'.$params['errors'][$key].'</h6>';
+                            echo $params['errors'][$key];
                         }
                         ?>
+                        </h6>
                     </div>
                     <?php
                     } 
@@ -64,14 +67,16 @@ if(count($_POST) != 0){
                         <br/>
                         <textarea class="form-control <?php if(isset($params['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
                         ><?php if(isset($_POST['body'])){echo $_POST['body'];} ?></textarea>
+                        <h6 class="error-text body">
                         <?php 
                         if(isset($params['errors']['body'])){
-                            echo '<h6 class="error-text">'.$params['errors']['body'].'</h6>';
+                            echo $params['errors']['body'] ;
                         }
                         ?>
+                        </h6>
                     </div>
                     <div class="center margin-top-bottom_level2">
-                        <button class="btn btn-outline-black" type="submit">送信</button>
+                        <button class="btn btn-outline-black">送信</button>
                     </div>
                 </form>
             </div>

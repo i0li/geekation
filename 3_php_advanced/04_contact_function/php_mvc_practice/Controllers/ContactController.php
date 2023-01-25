@@ -31,7 +31,6 @@ class ContactController {
     }
     elseif(strlen($name)>10){
       $errors['name'] = '10文字以内で入力してください';
-      return;
     }
     //フリガナのバリデーションチェック
     if(strlen($kana) === 0){
@@ -42,7 +41,7 @@ class ContactController {
     }
     //電話番号のバリデーションチェック
     if(preg_match('/[^0-9]+/', $tel)){
-        $errors['tel'] = '数字のみで入力してください';
+      $errors['tel'] = '数字のみで入力してください';
     }
     //メールアドレスのバリデーションチェック
     if(strlen($email) === 0){
@@ -65,6 +64,18 @@ class ContactController {
       'is_valid' => $is_valid
     ];
     return $params;
+  }
+
+  public function insertContact(){
+    $name  = $this->request['post']['name'];
+    $kana  = $this->request['post']['kana'];
+    $tel   = $this->request['post']['tel'];
+    $email = $this->request['post']['email'];
+    $body  = $this->request['post']['body'];
+    if(strlen($tel) === 0){
+      $tel = Null;
+    }
+    $this->Contact->insertContact($name, $kana, $tel, $email, $body);
   }
 }
 ?>

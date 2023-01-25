@@ -18,6 +18,33 @@ class Contact extends Db {
   }
 
   /**
+   * contactsテーブルの登録
+   */
+  public function insertContact($name, $kana, $tel, $email, $body){
+    try {
+      $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->dbh->beginTransaction();
+
+      $sql  = 'insert into contacts (name, kana, tel, email, body) ';
+      $sql .= 'values (:name, :kana, :tel, :email, :body)';
+      $sth = $this->dbh->prepare($sql);
+      $sth->execute(array(
+        ':name'  => $name ,
+        ':kana'  => $kana ,
+        ':tel'   => $tel  ,
+        ':email' => $email,
+        ':body'  => $body 
+      ));
+
+      $this->dbh->commit();
+    }catch (Exception $e) {
+      $this->dbh->rollBack();
+      echo "登録失敗: " . $e->getMessage() . "\n";
+      exit();
+    }
+  }
+
+  /**
    * アクセス修飾子
    */
   public function getId() : string{

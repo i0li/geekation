@@ -193,6 +193,10 @@
 	.button-table td{
 		width:50%;
 	}
+	/* ----contact_complete.php----*/
+	.complete-text-area {
+		height:75vh;
+	}
 
 
 
