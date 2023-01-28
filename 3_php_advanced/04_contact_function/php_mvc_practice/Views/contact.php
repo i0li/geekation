@@ -75,7 +75,7 @@ if(count($_POST) != 0){
                         <label for="body">お問い合わせ内容</label>
                         <br/>
                         <textarea class="form-control <?php if(isset($result['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
-                        ><?php if(isset($_POST['body'])){echo $_POST['body'];} ?></textarea>
+                        ><?php if(isset($_POST['body'])){echo htmlspecialchars($_POST['body'] , ENT_QUOTES, "UTF-8");} ?></textarea>
                         <h6 class="error-text body">
                         <?php 
                         if(isset($result['errors']['body'])){

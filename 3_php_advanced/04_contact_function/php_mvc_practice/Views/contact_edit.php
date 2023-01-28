@@ -64,7 +64,7 @@ if(isset($_POST['edit'])){
                             class="form-control <?php if(isset($result['errors'][$key])){echo 'red-border';} ?>" 
                             type="text" 
                             name=<?php echo $key?> 
-                            value="<?=htmlspecialchars($contact_data[$key]) ?>"
+                            value="<?=htmlspecialchars($contact_data[$key], ENT_QUOTES, "UTF-8") ?>"
                         >
                         <h6 class="error-text <?php echo $key ?>">
                         <?php 
@@ -79,7 +79,7 @@ if(isset($_POST['edit'])){
                         <label for="body">お問い合わせ内容</label>
                         <br/>
                         <textarea class="form-control <?php if(isset($result['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
-                        ><?=htmlspecialchars($contact_data['body']) ?></textarea>
+                        ><?=htmlspecialchars($contact_data['body'], ENT_QUOTES, "UTF-8") ?></textarea>
                         <h6 class="error-text body">
                         <?php 
                         if(isset($result['errors']['body'])){
