@@ -16,27 +16,71 @@ class ContactController {
     $dbh = $this->Contact->get_db_handler();
   }
 
-  public function confirm() {
+  /**
+   * cotact.phpで表の値を取得するための関数
+   */
+  public function index() {
+    $contacts_date = $this->Contact->findAll();
+    return $contacts_date;
+  }
+
+  /**
+   * databaseに値を追加する関数
+   */
+  public function insertContact(){
+    $name  = $this->request['post']['name'];
+    $kana  = $this->request['post']['kana'];
+    $tel   = $this->request['post']['tel'];
+    $email = $this->request['post']['email'];
+    $body  = $this->request['post']['body'];
+    if(strlen($tel) === 0){
+      $tel = Null;
+    }
+    $this->Contact->insertContact($name, $kana, $tel, $email, $body);
+  }
+
+    /**
+   *  contact_confirm.phpでformに入力するための値を取得する関数
+   */
+  public function edit_index($id) {
+    $contact_data = $this->Contact->findById($id);
+    return $contact_data;
+  }
+
+  /**
+   * idを指定してdatabaseの値を変える関数
+   */
+  public function updateContact($id, $name, $kana, $tel, $email, $body){
+    $this->Contact->updateContact($id, $name, $kana, $tel, $email, $body);
+  }
+
+  /**
+   * idを指定してdatabaseの値を削除する関数
+   */
+  public function deleteContact($id){
+    $this->Contact->deleteContact($id);
+  }
+
+
+  /**
+   * 入力フォームのバリデーションを行う関数
+   */
+  public function confirm($name, $kana, $tel, $email, $body) {
     $errors = array();
     $is_valid = False;
-    $name = $this->request['post']['name'];
-    $kana = $this->request['post']['kana'];
-    $tel = $this->request['post']['tel'];
-    $email = $this->request['post']['email'];
-    $body = $this->request['post']['body'];
 
     //氏名のバリデーションチェック
-    if(strlen($name) === 0){
+    if(mb_strlen($name) === 0){
       $errors['name'] = '氏名を入力してください';
     }
-    elseif(strlen($name)>10){
+    elseif(mb_strlen($name)>10){
       $errors['name'] = '10文字以内で入力してください';
     }
     //フリガナのバリデーションチェック
-    if(strlen($kana) === 0){
+    if(mb_strlen($kana) === 0){
       $errors['kana'] = 'フリガナを入力してください';
     }
-    elseif(strlen($kana)>10){
+    elseif(mb_strlen($kana)>10){
       $errors['kana'] = '10文字以内で入力してください';
     }
     //電話番号のバリデーションチェック
@@ -44,13 +88,13 @@ class ContactController {
       $errors['tel'] = '数字のみで入力してください';
     }
     //メールアドレスのバリデーションチェック
-    if(strlen($email) === 0){
+    if(mb_strlen($email) === 0){
       $errors['email'] = 'メールアドレスを入力してください';
     }elseif(!preg_match('/.+@.+/', $email)){
       $errors['email'] = 'メールアドレスに「@」を挿入してください';
     }
     //お問い合わせ内容のバリデーションチェック
-    if(strlen($body) === 0){
+    if(mb_strlen($body) === 0){
       $errors['body'] = 'お問い合わせ内容を入力してください';
     }
 
@@ -64,18 +108,6 @@ class ContactController {
       'is_valid' => $is_valid
     ];
     return $params;
-  }
-
-  public function insertContact(){
-    $name  = $this->request['post']['name'];
-    $kana  = $this->request['post']['kana'];
-    $tel   = $this->request['post']['tel'];
-    $email = $this->request['post']['email'];
-    $body  = $this->request['post']['body'];
-    if(strlen($tel) === 0){
-      $tel = Null;
-    }
-    $this->Contact->insertContact($name, $kana, $tel, $email, $body);
   }
 }
 ?>

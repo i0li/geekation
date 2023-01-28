@@ -9,10 +9,22 @@ $forms = [
 ];
 $contact = new ContactController();
 
+if(isset($_POST['delete_contact_id'])){
+    $contact->deleteContact($_POST['delete_contact_id']);
+    $_POST = array();
+};
+
+$contacts_data = $contact->index();
+
 if(count($_POST) != 0){
-    $params = $contact->confirm();
+    $name   = $_POST['name'];
+    $kana   = $_POST['kana'];
+    $tel    = $_POST['tel'];
+    $email  = $_POST['email'];
+    $body   = $_POST['body'];
+    $result = $contact->confirm($name, $kana, $tel, $email, $body);
     //バリデーションをクリアした時に確認画面に遷移（確認画面から戻ってきた時はリダイレクトしない）
-    if($params['is_valid'] && !(isset($_POST['back_btn']))){
+    if($result['is_valid'] && !(isset($_POST['back_btn']))){
         header('Location: contact_confirm.php', true, 307);
     }
 }
@@ -25,6 +37,7 @@ if(count($_POST) != 0){
     <title>Casteria</title>
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/table.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.7/css/swiper.min.css" />
@@ -38,47 +51,81 @@ if(count($_POST) != 0){
             <?php include("header.php") ?>
             <div class="form-area">
                 <h2 class="index_level2 center margin-top-bottom_level2">入力画面</h2>
-                <form name='contact_form' class='form_center' action='contact_confirm.php' method='post' onsubmit='return confirm()'>
-                    <?php
-                    foreach($forms as $key => $value){
-                    ?>
+                <form name='contact_form' class='form_center' action='contact_confirm.php' method='post' onsubmit='return validation()'>
+                    <?php foreach($forms as $key => $value): ?>
                     <div class="margin-top-bottom_level1">
                         <label for=<?php echo $key?>><?php echo $value?></label>
                         <br/>
                         <input 
-                            class="form-control <?php if(isset($params['errors'][$key])){echo 'red-border';} ?>" 
+                            class="form-control <?php if(isset($result['errors'][$key])){echo 'red-border';} ?>" 
                             type="text" 
                             name=<?php echo $key?> 
                             value="<?php if(isset($_POST[$key])){echo $_POST[$key];} ?>"
                         >
                         <h6 class="error-text <?php echo $key ?>">
                         <?php 
-                        if(isset($params['errors'][$key])){
-                            echo $params['errors'][$key];
+                        if(isset($result['errors'][$key])){
+                            echo $result['errors'][$key];
                         }
                         ?>
                         </h6>
                     </div>
-                    <?php
-                    } 
-                    ?>
+                    <?php endforeach; ?>
                     <div class="margin-top-bottom_level1">
                         <label for="body">お問い合わせ内容</label>
                         <br/>
-                        <textarea class="form-control <?php if(isset($params['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
+                        <textarea class="form-control <?php if(isset($result['errors']['body'])){echo 'red-border';} ?>" type="text" name="body"
                         ><?php if(isset($_POST['body'])){echo $_POST['body'];} ?></textarea>
                         <h6 class="error-text body">
                         <?php 
-                        if(isset($params['errors']['body'])){
-                            echo $params['errors']['body'] ;
+                        if(isset($result['errors']['body'])){
+                            echo $result['errors']['body'] ;
                         }
                         ?>
                         </h6>
                     </div>
                     <div class="center margin-top-bottom_level2">
-                        <button class="btn btn-outline-black">送信</button>
+                        <button class="btn btn-outline-black" type='submit'>送信</button>
+                        <input name="key" type="hidden" value="" />
                     </div>
                 </form>
+            </div>
+
+            <div class="table-area">
+                <table class='contacts_table'>
+                    <tr>
+                        <th class='contacts_table_label'>氏名</th>
+                        <th class='contacts_table_label'>フリガナ</th>
+                        <th class='contacts_table_label'>電話番号</th>
+                        <th class='contacts_table_label'>メールアドレス</th>
+                        <th class='contacts_table_label'>お問い合わせ内容</th>
+                        <th class='contacts_table_label'></th>
+                        <th class='contacts_table_label'></th>
+                    </tr>
+                    <?php if(count($contacts_data) === 0): ?>
+                        <td colspan="5" class='contacts_table_data center'>送信されたお問い合わせはありません</td>
+                    <?php else: ?>
+                    <?php   foreach($contacts_data as $contact_data): ?>
+                    <tr>
+                        <td class='contacts_table_data'><?=$contact_data['name'] ?></td>
+                        <td class='contacts_table_data'><?=$contact_data['kana'] ?></td>
+                        <td class='contacts_table_data'><?=$contact_data['tel'] ?></td>
+                        <td class='contacts_table_data'><?=$contact_data['email'] ?></td>
+                        <td class='contacts_table_data'><?=nl2br($contact_data['body']) ?></td>
+                        <td class='contacts_table_data'>
+                            <form name='update_form' class="form_center" action="contact_edit.php" method="post">
+                                <button class="btn btn-outline-black" name='update_contact_id' type="submit" value=<?=$contact_data['id'] ?>>編集</button>
+                            </form>
+                        </td>
+                        <td class='contacts_table_data'>
+                            <form name='delete_form' class="form_center" action="contact.php" method="post" onsubmit='return delete_confirm()'>
+                                <button class="btn btn-outline-black" name='delete_contact_id' type="submit" value=<?=$contact_data['id'] ?>>削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php   endforeach; ?>
+                    <?php endif; ?>
+                </table>
             </div>
             <?php include("footer.php") ?>
         </div>

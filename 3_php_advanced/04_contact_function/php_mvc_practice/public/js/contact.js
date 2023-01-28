@@ -1,18 +1,22 @@
-function confirm() {
-  var is_valid = true;
+function validation() {
+  if(document.forms.contact_form.key.value == 'back'){
+    return true;
+  }
+
+  let is_valid = true;
 
   const formElement = document.forms.contact_form;
-  var name  = formElement.name.value;
-  var kana  = formElement.kana.value;
-  var tel   = formElement.tel.value;
-  var email = formElement.email.value;
-  var body  = formElement.body.value;
+  const name  = formElement.name.value;
+  const kana  = formElement.kana.value;
+  const tel   = formElement.tel.value;
+  const email = formElement.email.value;
+  const body  = formElement.body.value;
 
-  var name_error_text  = document.getElementsByClassName('error-text name')[0];
-  var kana_error_text  = document.getElementsByClassName('error-text kana')[0];
-  var tel_error_text   = document.getElementsByClassName('error-text tel')[0];
-  var email_error_text = document.getElementsByClassName('error-text email')[0];
-  var body_error_text  = document.getElementsByClassName('error-text body')[0];
+  const name_error_text  = document.getElementsByClassName('error-text name')[0];
+  const kana_error_text  = document.getElementsByClassName('error-text kana')[0];
+  const tel_error_text   = document.getElementsByClassName('error-text tel')[0];
+  const email_error_text = document.getElementsByClassName('error-text email')[0];
+  const body_error_text  = document.getElementsByClassName('error-text body')[0];
  
   //氏名のバリデーション
   if(name.length == 0){
@@ -77,4 +81,12 @@ function confirm() {
   }
 
   return is_valid;
+}
+
+function delete_confirm(){
+  let result = window.confirm('本当に削除しますか？');
+  if( result ) {
+    return true;
+  }
+  return false;
 }

@@ -27,7 +27,7 @@ if(isset($_POST['submit'])){
             <?php include("header.php") ?>
             <div class="form-area">
                 <h2 class="index_level2 center margin-top-bottom_level2">確認画面</h2>
-                <form class="form_center" action="contact_confirm.php" method="post">
+                <form name='contact_form' class="form_center" action="contact_confirm.php" method="post">
                     <div class="margin-top-bottom_level1">
                         <label for="name">氏名</label><br/>
                         <input class="form-control" type="text" name="name" value="<?php echo $_POST["name"]?>" readonly>
@@ -50,8 +50,9 @@ if(isset($_POST['submit'])){
                     </div>
                     <table class="button-table margin-top-bottom_level2">
                         <tr>
-                            <td><button class="btn btn-outline-black" name="back_btn" type="submit" formaction="contact.php" formmethod="post">キャンセル</button></td>
-                            <td><button class="btn btn-outline-black" name='submit' type="submit">送信</button></td>
+                            <td><button class="btn btn-outline-black" name="back_btn" type="submit" formaction="contact.php" formmethod="post" onclick="contact_form.key.value='back'">キャンセル</button></td>
+                            <td><button class="btn btn-outline-black" name='submit' type="submit" onclick="contact_form.key.value='submit'">送信</button></td>
+                            <input name="key" type="hidden" value="" />
                         </tr>
                     </table>
                 </form>
