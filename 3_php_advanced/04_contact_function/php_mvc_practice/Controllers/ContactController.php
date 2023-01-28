@@ -70,14 +70,14 @@ class ContactController {
     $is_valid = False;
 
     //氏名のバリデーションチェック
-    if(mb_strlen($name) === 0){
+    if(empty($name)){
       $errors['name'] = '氏名を入力してください';
     }
     elseif(mb_strlen($name)>10){
       $errors['name'] = '10文字以内で入力してください';
     }
     //フリガナのバリデーションチェック
-    if(mb_strlen($kana) === 0){
+    if(empty($kana)){
       $errors['kana'] = 'フリガナを入力してください';
     }
     elseif(mb_strlen($kana)>10){
@@ -88,13 +88,13 @@ class ContactController {
       $errors['tel'] = '数字のみで入力してください';
     }
     //メールアドレスのバリデーションチェック
-    if(mb_strlen($email) === 0){
+    if(empty($email)){
       $errors['email'] = 'メールアドレスを入力してください';
     }elseif(!preg_match('/.+@.+/', $email)){
       $errors['email'] = 'メールアドレスに「@」を挿入してください';
     }
     //お問い合わせ内容のバリデーションチェック
-    if(mb_strlen($body) === 0){
+    if(empty($body)){
       $errors['body'] = 'お問い合わせ内容を入力してください';
     }
 

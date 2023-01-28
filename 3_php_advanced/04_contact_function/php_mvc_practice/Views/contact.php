@@ -60,7 +60,7 @@ if(count($_POST) != 0){
                             class="form-control <?php if(isset($result['errors'][$key])){echo 'red-border';} ?>" 
                             type="text" 
                             name=<?php echo $key?> 
-                            value="<?php if(isset($_POST[$key])){echo $_POST[$key];} ?>"
+                            value="<?php if(isset($_POST[$key])){echo htmlspecialchars($_POST[$key], ENT_QUOTES, "UTF-8");} ?>"
                         >
                         <h6 class="error-text <?php echo $key ?>">
                         <?php 
@@ -107,11 +107,11 @@ if(count($_POST) != 0){
                     <?php else: ?>
                     <?php   foreach($contacts_data as $contact_data): ?>
                     <tr>
-                        <td class='contacts_table_data'><?=$contact_data['name'] ?></td>
-                        <td class='contacts_table_data'><?=$contact_data['kana'] ?></td>
-                        <td class='contacts_table_data'><?=$contact_data['tel'] ?></td>
-                        <td class='contacts_table_data'><?=$contact_data['email'] ?></td>
-                        <td class='contacts_table_data'><?=nl2br($contact_data['body']) ?></td>
+                        <td class='contacts_table_data'><?=htmlspecialchars($contact_data['name'], ENT_QUOTES, "UTF-8") ?></td>
+                        <td class='contacts_table_data'><?=htmlspecialchars($contact_data['kana'], ENT_QUOTES, "UTF-8") ?></td>
+                        <td class='contacts_table_data'><?=htmlspecialchars($contact_data['tel'], ENT_QUOTES, "UTF-8") ?></td>
+                        <td class='contacts_table_data'><?=htmlspecialchars($contact_data['email'], ENT_QUOTES, "UTF-8") ?></td>
+                        <td class='contacts_table_data'><?=nl2br(htmlspecialchars($contact_data['body'], ENT_QUOTES, "UTF-8")) ?></td>
                         <td class='contacts_table_data'>
                             <form name='update_form' class="form_center" action="contact_edit.php" method="post">
                                 <button class="btn btn-outline-black" name='update_contact_id' type="submit" value=<?=$contact_data['id'] ?>>編集</button>
