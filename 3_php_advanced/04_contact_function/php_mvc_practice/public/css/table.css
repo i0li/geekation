@@ -1,0 +1,33 @@
+table,
+tr,
+td,
+th {
+	border: 1px solid #ced4da;
+	margin: 80px auto 20px auto;
+}
+
+
+.col-12 .database {
+	margin:0 auto;
+	width: 100%;
+}
+
+.col-12 .database td {
+	max-width: 300px;
+	max-height: 200px;
+	overflow: hidden;
+}
+
+.contacts_table_label {
+	background-color: lightgray;
+	text-align: center;
+	color:rgba(0,0,0,.5);
+	font-weight: bold;
+	padding: 5px 10px;
+}
+
+.contacts_table_data{
+	background-color: white;
+	color:#495057;
+	padding: 5px 10px;
+}
