@@ -60,9 +60,7 @@ $(window).on('resize',function(){
 //***********************************//
 $(function() {
   let chat_area_contants = $('#chat_area_contants');
-  if(chat_area_contants[0] != null){
   chat_area_contants[0].scrollTo(0, chat_area_contants[0].scrollHeight);
-  };
 });
 
 //***********************************//
@@ -139,7 +137,7 @@ $(function () {
 //***********************************//
 //     メッセージ用textareaの高さ変更 
 //***********************************//
-$('#message-textarea').each(function () {
+$('#chat_contants').each(function () {
   this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
 }).on("input", function () {
   this.style.height = 0;
@@ -323,4 +321,38 @@ $("#delete-word-confirm-modal-open").click(
     adjustModalArea("#delete-word-confirm-modal-content") ;
     adjustTextareaHeight();
   });
+});
+
+//***********************************//
+//    　　　 メッセージ送信用
+//***********************************//
+
+window.Echo.channel('ChatChannel')
+.listen('SendChatEvent',function(data){
+  if((data['chat_contants']['user_id'] != login_user_id) && (data['chat_contants']['room_id'] == current_room_id)){
+    let receive_textarea_value_array = data['chat_contants']['text'].split(/\r?\n/g);
+    let receive_chat_contants = '<div class="message_box w-100"> \
+                                  <div class="d-flex flex-row ms-3 mt-3 text-secondary"> \
+                                    <div class="pe-2">'+ data['chat_contants']['user_name'] +'</div>\
+                                    <div class="pe-2">' + data['chat_contants']['send_at'] + '</div>\
+                                    <div class="pe-2"></div>\
+                                  </div>\
+                                  <div class="bg-white ms-3 px-3 py-2 alert alert-secondary message-box">';
+    $.each(receive_textarea_value_array, function(index, value){
+      receive_chat_contants += value+'</br>';
+    })
+    receive_chat_contants += '</div> </div>';
+  
+    $('#chat_area_contants').append(receive_chat_contants)
+    let chat_area_contants = $('#chat_area_contants');
+    chat_area_contants[0].scrollTo(0, chat_area_contants[0].scrollHeight);
+  }
+});
+
+//送信ボタンのダブルクリックを禁止
+$(function() {
+    $("#chat_send_button").on('click', function() {
+        $("#chat_send_button").prop('disabled', true);
+        document.chat_form.submit();
+    });
 });

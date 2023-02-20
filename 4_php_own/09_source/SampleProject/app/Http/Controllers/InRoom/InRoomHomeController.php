@@ -21,7 +21,6 @@ class InRoomHomeController extends Controller
     public function index(Request $request)
     {
       
-      $selected_room_id = 'hello';
       if(session()->has('selected_room_id')){
         $selected_room_id = session('selected_room_id');
       }else{

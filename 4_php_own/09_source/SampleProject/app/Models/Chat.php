@@ -17,6 +17,7 @@ class Chat extends Model
     protected $fillable = [
         'room_id',
         'user_id',
-        'text'
+        'text',
+        'send_at'
     ];
 }

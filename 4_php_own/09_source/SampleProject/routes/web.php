@@ -39,6 +39,7 @@ Route::post('/edit_word', [App\Http\Controllers\InRoom\Word\EditWordController::
 Route::post('/delete_word', [App\Http\Controllers\InRoom\Word\DeleteWordController::class, 'delete']);
 
 
+Route::post('/send_chat', [App\Http\Controllers\InRoom\Chat\SendChatController::class, 'register']);
 
 
 

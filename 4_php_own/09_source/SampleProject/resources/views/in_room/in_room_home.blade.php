@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
 @section('custom-script')
+<script src="{{ asset('js/myscript.js') }}" defer></script>
 <script>
   let words = @json($words);
-  console.log(words);
+  let login_user_id = @json(Auth::user()->id);
+  let current_room_id = @json($selected_room_info->id);
 </script>
 @endsection
 
@@ -61,7 +63,7 @@
             <div class="pt-3 row align-items-center">
               <label for="create_word_title" class="col-md-5 col-form-label text-start">{{ '単語' }}</label>
               <div class="col-md-12">
-                  <input id="create_word_title" type="text" class="form-control @error('create_word_title') is-invalid @enderror" name="create_word_title" value="{{ old('create_word_title') }}" required autocomplete="word_ttile" autofocus>
+                  <input id="create_word_title" type="text" class="form-control @error('create_word_title') is-invalid @enderror" name="create_word_title" value="{{ old('create_word_title') }}" required autocomplete="word_ttile">
                   @error('create_word_title')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
@@ -289,7 +291,7 @@
                 <div class='pe-3'>{{$chat->send_at}}</div>
               </div>
               <div class="bg-white me-3 px-3 py-2 alert alert-secondary message-box">
-                {{$chat->text}}
+                {!! nl2br(e($chat->text)) !!}
               </div>
             </div>
           @else
@@ -297,10 +299,9 @@
               <div class='d-flex flex-row ms-3 mt-3 text-secondary'>
                 <div class='pe-2'>{{$chat->user_name}}</div>
                 <div class='pe-2'>{{$chat->send_at}}</div>
-                <div class='pe-2'></div>
               </div>
               <div class="bg-white ms-3 px-3 py-2 alert alert-secondary message-box">
-                {{$chat->text}}
+                {!! nl2br(e($chat->text)) !!}
               </div>
             </div>
           @endif
@@ -308,12 +309,17 @@
       </div>
 
       <div id="chat_send_form_area" class="border-top bg-white border-gray border-2 px-3 py-2">
-        <form class='d-flex message-form align-items-end'>
-          <textarea id="message-textarea" class="form-control me-3" id="exampleFormControlTextarea1" rows="1"></textarea>
+        <form name='chat_form' action="{{ url('send_chat') }}" method="POST" class='d-flex message-form align-items-end'>
+        @csrf
+          @if($errors->has('chat_contants'))
+            <textarea id="chat_contants" name="chat_contants" class="form-control me-3" id="exampleFormControlTextarea1" rows="1" autofocus ></textarea>
+          @else
+            <textarea id="chat_contants" name="chat_contants" class="form-control me-3" id="exampleFormControlTextarea1" rows="1"></textarea>
+          @endif
           <div class="">
-            <input formaction="{{ url('/edit_room') }}" class="hover-expand" type="image" src="img/send_icon.png" alt="送信" width="30px" height="30px">
+            <input id="chat_send_button" class="hover-expand" type="image" src="img/send_icon.png" alt="送信" width="30px" height="30px" >
           </div>
-          </form>
+        </form>
       </div>
     </div>
   </div>
@@ -322,7 +328,7 @@
 @endsection
 
 @section('modal-overlay')
-  @if($errors->any())
+  @if($errors->any() &&  !$errors->has('chat_contants'))
   <div id="modal-overlay" style='display:block;'></div>
   @endif
 @endsection
