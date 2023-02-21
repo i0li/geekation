@@ -19,8 +19,14 @@ class EditRoomController extends Controller
      */
     public function index(Request $request)
     {
+        if(session()->has('edit_selected_room_id')){
+            $selected_room_id = session('edit_selected_room_id');
+          }else{
+            $selected_room_id = $request->selected_room_id;
+            session(['edit_selected_room_id' => $selected_room_id]);
+          }
         $users = User::orderBy('name')->get() ;
-        $selected_room_info = Room::where('id', $request->selected_room_id)->first() ;
+        $selected_room_info = Room::where('id', $selected_room_id)->first() ;
         $selected_room_member_result = Member::select('user_id')->where('room_id', $request->selected_room_id)->orderBy('user_id')->get();
         $selected_room_member = array();
         foreach($selected_room_member_result as $user_id){
@@ -71,6 +77,7 @@ class EditRoomController extends Controller
             }
 
             DB::commit();
+            session()->forget('edit_selected_room_id');
         } catch (Throwable $e) {
             DB::rollBack();
         }

@@ -24,6 +24,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/create_room', [App\Http\Controllers\Room\CreateRoomController::class, 'index']);
 Route::post('/create_room', [App\Http\Controllers\Room\CreateRoomController::class, 'register']);
 
+Route::get('/edit_room', [App\Http\Controllers\Room\EditRoomController::class, 'index']);
 Route::post('/edit_room', [App\Http\Controllers\Room\EditRoomController::class, 'index']);
 Route::post('/edit_exec', [App\Http\Controllers\Room\EditRoomController::class, 'update']);
 
@@ -38,8 +39,4 @@ Route::post('/edit_word', [App\Http\Controllers\InRoom\Word\EditWordController::
 
 Route::post('/delete_word', [App\Http\Controllers\InRoom\Word\DeleteWordController::class, 'delete']);
 
-
 Route::post('/send_chat', [App\Http\Controllers\InRoom\Chat\SendChatController::class, 'register']);
-
-
-

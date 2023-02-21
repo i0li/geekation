@@ -30,6 +30,7 @@ class HomeController extends Controller
     {
         if(session()->has('selected_room_id')){
             session()->forget('selected_room_id');
+            session()->forget('edit_selected_room_id');
         }
         $my_room_ids = Member::select('room_id')->where('user_id', Auth::id())->orderBy('room_id')->get() ;
         $my_rooms_info = Room::whereIn('id', $my_room_ids)->orderBy('id')->get();
